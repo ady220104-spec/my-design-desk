@@ -26,16 +26,17 @@ npm run build      # 类型检查 + 生产构建（产出 dist/，已按 fabric/
 npm test           # 运行 vitest 单元测试
 ```
 
-## 部署到 Vercel
+## 部署
 
-项目已配置 `vercel.json`（framework: vite）。部署需要你本人登录 Vercel 账号（OAuth）：
+**线上地址**：https://my-design-desk.vercel.app （Vercel 生产环境）
+
+已接入 **GitHub 自动部署**：仓库 [ady220104-spec/my-design-desk](https://github.com/ady220104-spec/my-design-desk) 的 `master` 分支每次 `git push` 自动触发 Vercel 构建并发布。
+
+手动部署（备用）：
 
 ```bash
-npx vercel login     # 浏览器登录授权（仅你本人操作）
-npx vercel --prod    # 部署到生产，首次会引导创建/关联项目，完成后输出公开 URL
+npx vercel --prod --yes --scope ady220104-2383s-projects
 ```
-
-或将仓库推到 GitHub 并在 Vercel 控制台导入，开启 Git 集成后每次 push 自动部署。
 
 ## 技术栈
 

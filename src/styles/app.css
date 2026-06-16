@@ -23,6 +23,11 @@
   --warning: #f59e0b;
   --topbar-h: 48px;
   --bottombar-h: 32px;
+  --on-accent: #f5f8fc;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ring-accent: 0 0 0 3px rgba(74, 158, 255, 0.26);
+  --shadow-pop: 0 16px 40px -12px rgba(8, 12, 30, 0.62);
+  --shadow-canvas: 0 10px 34px -10px rgba(6, 10, 26, 0.62);
 }
 
 body {
@@ -37,6 +42,27 @@ body {
   height: 100dvh;
   display: flex;
   flex-direction: column;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* 键盘可达的聚焦环：只在键盘导航时出现，不干扰鼠标点击 */
+:focus-visible {
+  outline: none;
+}
+
+.topbar-btn:focus-visible,
+.sm-btn:focus-visible,
+.tool-btn:focus-visible,
+.right-tab:focus-visible,
+.search-input:focus-visible,
+.field-input:focus-visible,
+.prop-input:focus-visible,
+.prompt-textarea:focus-visible {
+  box-shadow: var(--ring-accent);
+  border-color: var(--accent);
 }
 
 /* Top bar */
@@ -66,17 +92,21 @@ body {
   color: var(--text-primary);
   font-size: 13px;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.16s var(--ease), border-color 0.16s var(--ease), transform 0.12s var(--ease);
 }
 
 .topbar-btn:hover {
   background: var(--bg-hover);
 }
 
+.topbar-btn:active {
+  transform: scale(0.97);
+}
+
 .topbar-btn.primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .topbar-btn.primary:hover {
@@ -146,7 +176,7 @@ body {
   margin-bottom: 4px;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: all 0.15s;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease), border-color 0.16s var(--ease), transform 0.12s var(--ease);
 }
 
 .template-card:hover {
@@ -237,7 +267,7 @@ body {
   color: var(--text-secondary);
   font-size: 12px;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease), border-color 0.16s var(--ease), transform 0.12s var(--ease);
 }
 
 .tool-btn:hover {
@@ -251,6 +281,10 @@ body {
   border-color: var(--accent);
 }
 
+.tool-btn:active {
+  transform: scale(0.96);
+}
+
 .canvas-area {
   flex: 1;
   display: flex;
@@ -262,7 +296,7 @@ body {
 }
 
 .canvas-wrapper {
-  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  box-shadow: var(--shadow-canvas);
   position: relative;
 }
 
@@ -378,7 +412,7 @@ body {
   background: transparent;
   border: 0;
   border-bottom: 2px solid transparent;
-  transition: all 0.15s;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease), border-color 0.16s var(--ease), transform 0.12s var(--ease);
 }
 
 .right-tab:hover {
@@ -485,7 +519,7 @@ body {
   font-size: 12px;
   cursor: pointer;
   gap: 6px;
-  transition: all 0.15s;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease), border-color 0.16s var(--ease), transform 0.12s var(--ease);
 }
 
 .layer-item:hover {
@@ -600,7 +634,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(8, 10, 24, 0.64);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -615,6 +649,7 @@ body {
   min-width: 400px;
   max-width: 560px;
   width: 100%;
+  box-shadow: var(--shadow-pop);
 }
 
 .modal-title {
@@ -637,7 +672,7 @@ body {
   padding: 32px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease), border-color 0.16s var(--ease), transform 0.12s var(--ease);
   color: var(--text-muted);
   font-size: 13px;
 }
@@ -681,12 +716,12 @@ body {
 
 .toast.success {
   background: var(--success);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .toast.error {
   background: var(--danger);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 @keyframes toast-in {
@@ -717,11 +752,16 @@ body {
   color: var(--text-secondary);
   font-size: 11px;
   cursor: pointer;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease), transform 0.12s var(--ease);
 }
 
 .sm-btn:hover {
   background: var(--bg-hover);
   color: var(--text-primary);
+}
+
+.sm-btn:active {
+  transform: scale(0.96);
 }
 
 .sm-btn.danger {

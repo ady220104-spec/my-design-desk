@@ -13,3 +13,5 @@ scripts
 /*.jpg
 /*.jpeg
 *.log
+
+tsconfig.tsbuildinfo

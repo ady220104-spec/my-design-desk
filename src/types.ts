@@ -73,14 +73,21 @@ export interface Asset {
   base64?: string
 }
 
+export interface FieldPreset {
+  presetName: string
+  suggestedFields: string[]
+}
+
 export interface Template {
   id: string
   name: string
+  templateType?: string
   tags: string[]
   canvas: CanvasConfig
   promptInfo: PromptInfo
   layers: Layer[]
   fields: Field[]
+  fieldPreset?: FieldPreset
   versions: Version[]
   createdAt: string
   updatedAt: string

@@ -131,40 +131,78 @@ export default function App() {
           onImportJSON={handleImportJSON}
         />
 
-        <Canvas />
+        <Canvas
+          onCreateNew={() => setShowCreate(true)}
+          onImportJSON={handleImportJSON}
+        />
 
         <div className="right-panel">
-          <div className="right-tabs">
-            <div
-              className={`right-tab ${rightTab === 'fields' ? 'active' : ''}`}
-              onClick={() => setRightTab('fields')}
-            >
-              字段
+          {template ? (
+            <>
+              <div className="right-tabs">
+                <button
+                  type="button"
+                  className={`right-tab ${rightTab === 'fields' ? 'active' : ''}`}
+                  onClick={() => setRightTab('fields')}
+                >
+                  字段
+                </button>
+                <button
+                  type="button"
+                  className={`right-tab ${rightTab === 'layers' ? 'active' : ''}`}
+                  onClick={() => setRightTab('layers')}
+                >
+                  图层
+                </button>
+                <button
+                  type="button"
+                  className={`right-tab ${rightTab === 'prompt' ? 'active' : ''}`}
+                  onClick={() => setRightTab('prompt')}
+                >
+                  Prompt
+                </button>
+                <button
+                  type="button"
+                  className={`right-tab ${rightTab === 'versions' ? 'active' : ''}`}
+                  onClick={() => setRightTab('versions')}
+                >
+                  版本
+                </button>
+              </div>
+              <div className="right-content">
+                {rightTab === 'fields' && <FieldPanel />}
+                {rightTab === 'layers' && <LayerPanel />}
+                {rightTab === 'prompt' && <PromptPanel />}
+                {rightTab === 'versions' && <VersionPanel />}
+              </div>
+            </>
+          ) : (
+            <div className="right-empty">
+              <div className="right-empty-title">打开模板后可配置</div>
+              <div className="right-empty-item">
+                <span>字段</span>
+                <p>把日期、门店、活动名绑定到文字层。</p>
+              </div>
+              <div className="right-empty-item">
+                <span>图层</span>
+                <p>调整文字和遮盖层，保留底图不被误删。</p>
+              </div>
+              <div className="right-empty-item">
+                <span>批量</span>
+                <p>一次填写多期内容并导出 ZIP。</p>
+              </div>
             </div>
-            <div
-              className={`right-tab ${rightTab === 'layers' ? 'active' : ''}`}
-              onClick={() => setRightTab('layers')}
-            >
-              图层
-            </div>
-            <div
-              className={`right-tab ${rightTab === 'prompt' ? 'active' : ''}`}
-              onClick={() => setRightTab('prompt')}
-            >
-              Prompt
-            </div>
-            <div
-              className={`right-tab ${rightTab === 'versions' ? 'active' : ''}`}
-              onClick={() => setRightTab('versions')}
-            >
-              版本
-            </div>
-          </div>
-          <div className="right-content">
-            {rightTab === 'fields' && <FieldPanel />}
-            {rightTab === 'layers' && <LayerPanel />}
-            {rightTab === 'prompt' && <PromptPanel />}
-            {rightTab === 'versions' && <VersionPanel />}
+          )}
+        </div>
+      </div>
+
+      <div className="mobile-blocker">
+        <div className="mobile-blocker-card">
+          <div className="mobile-blocker-title">请在电脑端编辑模板</div>
+          <p>这个工具需要画布、模板库和属性面板同时可见。手机端容易误拖图层，建议在桌面浏览器使用。</p>
+          <div className="mobile-blocker-actions">
+            <button className="topbar-btn primary" onClick={() => setShowCreate(true)}>新建模板</button>
+            <button className="topbar-btn" onClick={handleImportJSON}>导入备份</button>
           </div>
         </div>
       </div>

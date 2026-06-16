@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { generateId } from '../utils/id'
 import { saveAsset, saveTemplate } from '../store/db'
 import { useTemplateStore } from '../store/useTemplateStore'
+import { TEMPLATE_TYPES, TEMPLATE_PRESETS, UNCATEGORIZED } from '../utils/presets'
 import type { Template, BackgroundLayer } from '../types'
 
 interface Props {
@@ -14,6 +15,8 @@ export function CreateTemplateDialog({ onClose }: Props) {
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null)
   const [name, setName] = useState('')
   const [tags, setTags] = useState('')
+  const [templateType, setTemplateType] = useState<string>('')
+  const [chosenFields, setChosenFields] = useState<string[]>([])
   const [modelName, setModelName] = useState('GPT Image 2')
   const [prompt, setPrompt] = useState('')
   const [creating, setCreating] = useState(false)
@@ -69,6 +72,7 @@ export function CreateTemplateDialog({ onClose }: Props) {
       const template: Template = {
         id: templateId,
         name: name || '未命名模板',
+        templateType: templateType || UNCATEGORIZED,
         tags: tags.split(/[,，、\s]+/).filter(Boolean),
         canvas: {
           width: dims.w,
@@ -82,7 +86,16 @@ export function CreateTemplateDialog({ onClose }: Props) {
           styleNotes: '',
         },
         layers: [bgLayer],
-        fields: [],
+        fields: chosenFields.map((label) => ({
+          id: generateId('field'),
+          label,
+          type: 'text' as const,
+          value: '',
+          required: false,
+        })),
+        fieldPreset: templateType
+          ? { presetName: templateType, suggestedFields: TEMPLATE_PRESETS[templateType] || [] }
+          : undefined,
         versions: [],
         createdAt: now,
         updatedAt: now,
@@ -96,6 +109,20 @@ export function CreateTemplateDialog({ onClose }: Props) {
     } finally {
       setCreating(false)
     }
+  }
+
+  const handleSelectType = (t: string) => {
+    if (t === templateType) {
+      setTemplateType('')
+      setChosenFields([])
+    } else {
+      setTemplateType(t)
+      setChosenFields(TEMPLATE_PRESETS[t] || [])
+    }
+  }
+
+  const toggleField = (f: string) => {
+    setChosenFields((prev) => (prev.includes(f) ? prev.filter((x) => x !== f) : [...prev, f]))
   }
 
   return (
@@ -143,6 +170,44 @@ export function CreateTemplateDialog({ onClose }: Props) {
             placeholder="例如：会员日月度海报"
           />
         </div>
+
+        <div className="field-group">
+          <div className="field-label">模板类型（用于分类和默认字段）</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {TEMPLATE_TYPES.map((t) => (
+              <button
+                key={t}
+                type="button"
+                className={`tool-btn ${templateType === t ? 'active' : ''}`}
+                onClick={() => handleSelectType(t)}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {templateType && (
+          <div className="field-group">
+            <div className="field-label">推荐字段（点击增删，创建后可绑定文字层）</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {(TEMPLATE_PRESETS[templateType] || []).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  className={`tool-btn ${chosenFields.includes(f) ? 'active' : ''}`}
+                  onClick={() => toggleField(f)}
+                >
+                  {chosenFields.includes(f) ? '✓ ' : ''}
+                  {f}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 4 }}>
+              将创建 {chosenFields.length} 个待绑定字段
+            </div>
+          </div>
+        )}
 
         <div className="field-group">
           <div className="field-label">标签 (逗号分隔)</div>

@@ -13,7 +13,12 @@ declare module 'fabric' {
 
 const ZOOM_LEVELS = [0.25, 0.5, 0.75, 1]
 
-export function Canvas() {
+interface CanvasProps {
+  onCreateNew: () => void
+  onImportJSON: () => void
+}
+
+export function Canvas({ onCreateNew, onImportJSON }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const fcRef = useRef<fabric.Canvas | null>(null)
 
@@ -284,9 +289,33 @@ export function Canvas() {
     return (
       <div className="center-panel">
         <div className="canvas-area">
-          <div className="canvas-empty">
-            <div style={{ fontSize: 48, opacity: 0.3 }}>🎨</div>
-            <div>请从左侧选择一个模板，或新建模板</div>
+          <div className="canvas-empty onboarding-empty">
+            <div className="onboarding-kicker">本地海报模板工作台</div>
+            <div className="onboarding-title">把一张海报变成可复用模板</div>
+            <p className="onboarding-copy">
+              上传底图，标记需要替换的文字字段，再批量导出多期图片。
+            </p>
+            <div className="onboarding-actions">
+              <button className="topbar-btn primary" onClick={onCreateNew}>导入图片创建模板</button>
+              <button className="topbar-btn" onClick={onImportJSON}>导入模板备份</button>
+            </div>
+            <div className="onboarding-steps">
+              <div>
+                <span>1</span>
+                <strong>上传底图</strong>
+                <p>选择 PNG、JPG 或 WebP 作为模板基础。</p>
+              </div>
+              <div>
+                <span>2</span>
+                <strong>绑定字段</strong>
+                <p>把日期、门店、价格等内容绑定到文字层。</p>
+              </div>
+              <div>
+                <span>3</span>
+                <strong>批量导出</strong>
+                <p>填写多期内容，一次打包为图片 ZIP。</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
